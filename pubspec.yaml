@@ -1,7 +1,13 @@
 name: flutter_minimalist_audio_player
-description: "A new Flutter plugin project."
-version: 1.0.0
+description: "Minimalist flutter audio player."
+version: 1.0.1
 repository: https://github.com/mynumeric-mobile/flutter_minimalist_audio_player
+
+# This package supports all platforms listed below.
+platforms:
+  android:
+  ios:
+  web:
 
 environment:
   sdk: '>=3.3.0 <4.0.0'
