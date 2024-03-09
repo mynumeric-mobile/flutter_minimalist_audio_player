@@ -1,8 +1,8 @@
-# flutter_minimalist_audio_player_example
+## flutter_minimalist_audio_player_example
 
 This plugin is a simple UI implementation for AudioPlayer plugin. It simply display a icon button for playing media
 
-##Usage
+# Usage
 
 Have a look at exemple folder
 
