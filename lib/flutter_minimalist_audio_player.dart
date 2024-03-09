@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 class MinimalistAudioPlayer extends StatefulWidget {
   const MinimalistAudioPlayer({super.key, required this.media, this.onStart, this.onStop});
   final dynamic media;
-  final Function(Player)? onStart;
-  final Function(Player)? onStop;
+  final Function(MiniPlayer)? onStart;
+  final Function(MiniPlayer)? onStop;
 
   @override
   State<MinimalistAudioPlayer> createState() => _MinimalistAudioPlayerState();
@@ -16,7 +16,7 @@ class _MinimalistAudioPlayerState extends State<MinimalistAudioPlayer> {
   late StreamSubscription<PlayerState> _stream;
   PlayerState _state = PlayerState.stopped;
   bool _waiting = false;
-  final _player = Player();
+  final _player = MiniPlayer();
   bool _error = false;
   Duration? _duration;
   double? _percent;
@@ -140,4 +140,4 @@ extension PlayerStateExtension on PlayerState {
   }
 }
 
-class Player extends AudioPlayer {}
+class MiniPlayer extends AudioPlayer {}

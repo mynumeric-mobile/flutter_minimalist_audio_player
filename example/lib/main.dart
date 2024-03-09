@@ -19,7 +19,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Player? _currentPlayer;
+  MiniPlayer? _currentPlayer;
 
   @override
   void initState() {
