@@ -4,3 +4,6 @@
 * Production release
 ## 1.0.2
 * rename class Player to MiniPlayer
+## 1.1.0
+* add beforePlay event
+* add fade in and fade out effet

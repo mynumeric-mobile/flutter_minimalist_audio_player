@@ -1,11 +1,29 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 
+///
+/// MinimalistAudioPlayer Widget
+///
 class MinimalistAudioPlayer extends StatefulWidget {
-  const MinimalistAudioPlayer({super.key, required this.media, this.onStart, this.onStop});
+  const MinimalistAudioPlayer({super.key, required this.media, this.beforeStart, this.onStart, this.onStop});
   final dynamic media;
+
+  ///
+  /// allow job before start buffering source
+  /// for fade out for exemple
+  ///
+  final Future<void> Function(MiniPlayer)? beforeStart;
+
+  ///
+  /// call when user click play before buffering start and play
+  ///
   final Function(MiniPlayer)? onStart;
+
+  ///
+  /// call when player stop playing
+  ///
   final Function(MiniPlayer)? onStop;
 
   @override
@@ -56,7 +74,7 @@ class _MinimalistAudioPlayerState extends State<MinimalistAudioPlayer> {
             onPressed: () async {
               switch (_state) {
                 case PlayerState.playing:
-                  _player.stop();
+                  _player.fadeOut(duration: const Duration(seconds: 3));
                   _percent = null;
                   _duration = null;
                   widget.onStop?.call(_player);
@@ -68,7 +86,12 @@ class _MinimalistAudioPlayerState extends State<MinimalistAudioPlayer> {
                   _percent = null;
                   setState(() {});
                   try {
-                    await _player.play(UrlSource(widget.media)).then((value) async {
+                    await _player
+                        .fadeIn(
+                      source: UrlSource(widget.media),
+                      beforeStart: widget.beforeStart,
+                    )
+                        .then((value) async {
                       _duration = await _player.getDuration();
                     }).onError((error, stackTrace) {
                       _error = true;
@@ -108,6 +131,10 @@ class _MinimalistAudioPlayerState extends State<MinimalistAudioPlayer> {
   }
 }
 
+///
+/// Enum Player state helper class
+///
+
 extension PlayerStateExtension on PlayerState {
   IconData get icon {
     switch (this) {
@@ -140,4 +167,108 @@ extension PlayerStateExtension on PlayerState {
   }
 }
 
-class MiniPlayer extends AudioPlayer {}
+///
+/// Fade mode
+///
+enum FadeMode { fadeIn, fadeOut }
+
+///
+/// Extende audio player
+///
+class MiniPlayer extends AudioPlayer {
+  double? _refVolume;
+  Duration? _fadeRemaining;
+
+  ///
+  /// Default fade duration
+  ///
+  Duration defaultFadeDuration = const Duration(seconds: 3);
+
+  ///
+  /// update fade loop duration
+  ///
+  final Duration fadeLoopDuration = const Duration(milliseconds: 50);
+
+  ///
+  /// play override
+  /// handle before start function
+  ///
+  @override
+  Future<void> play(Source source,
+      {double? volume,
+      double? balance,
+      AudioContext? ctx,
+      Duration? position,
+      PlayerMode? mode,
+      Function(MiniPlayer)? beforePlay}) async {
+    await beforePlay?.call(this);
+    return super.play(
+      source,
+      volume: volume,
+      ctx: ctx,
+      position: position,
+      mode: mode,
+    );
+  }
+
+  ///
+  /// fade out audio file
+  ///
+  Future<void> fadeOut({Duration? duration}) async {
+    if (state != PlayerState.playing) return;
+    _fadeRemaining = null;
+    return _fade(duration: duration ?? defaultFadeDuration, fadeMode: FadeMode.fadeOut);
+  }
+
+  ///
+  /// fade in audio file
+  ///
+  Future<void> fadeIn(
+      {Duration? duration,
+      required Source source,
+      double? volume,
+      double? balance,
+      AudioContext? ctx,
+      Duration? position,
+      PlayerMode? mode,
+      Function(MiniPlayer)? beforeStart}) async {
+    return play(source, volume: volume, balance: balance, ctx: ctx, position: position, mode: mode, beforePlay: beforeStart)
+      ..then((value) {
+        _fadeRemaining == null;
+        _fade(
+          duration: duration ?? defaultFadeDuration,
+          fadeMode: FadeMode.fadeIn,
+        );
+      });
+  }
+
+  ///
+  /// internal fade audio file
+  ///
+  Future<void> _fade({required Duration duration, required FadeMode fadeMode, Function? onEnd}) async {
+    if (_fadeRemaining == null) {
+      _fadeRemaining = Duration(milliseconds: duration.inMilliseconds);
+      if (fadeMode == FadeMode.fadeOut || _refVolume == null) _refVolume = volume;
+    }
+
+    _fadeRemaining = Duration(milliseconds: max(0, _fadeRemaining!.inMilliseconds - fadeLoopDuration.inMilliseconds));
+
+    final p = _fadeRemaining!.inMilliseconds / duration.inMilliseconds;
+
+    setVolume((fadeMode == FadeMode.fadeIn ? 1 - p : p) * _refVolume!);
+
+    if (p == 0) {
+      _fadeRemaining = null;
+      if (fadeMode == FadeMode.fadeOut) {
+        await stop();
+        onEnd?.call();
+      } else {
+        onEnd?.call();
+      }
+    } else {
+      Future.delayed(fadeLoopDuration, () {
+        _fade(duration: duration, fadeMode: fadeMode);
+      });
+    }
+  }
+}

@@ -42,7 +42,7 @@ class _MyAppState extends State<MyApp> {
             itemExtent: 50,
             itemBuilder: (context, index) {
               return DefaultTextStyle(
-                  style: TextStyle().copyWith(fontSize: 25, color: Colors.amber),
+                  style: const TextStyle().copyWith(fontSize: 25, color: Colors.amber),
                   child: radioWidget(radios.keys.elementAt(index), radios.values.elementAt(index)));
             },
           ),
@@ -64,8 +64,8 @@ class _MyAppState extends State<MyApp> {
         const SizedBox(width: 5),
         MinimalistAudioPlayer(
           media: url,
-          onStart: (p) {
-            _currentPlayer?.stop();
+          beforeStart: (p) async {
+            await _currentPlayer?.fadeOut();
             _currentPlayer = p;
           },
           onStop: (p) {
