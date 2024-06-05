@@ -1,6 +1,6 @@
 name: flutter_minimalist_audio_player
 description: "This plugin is a simple UI implementation for AudioPlayer plugin. It simply display a icon button for playing media"
-version: 1.1.0
+version: 1.1.1
 repository: https://github.com/mynumeric-mobile/flutter_minimalist_audio_player
 
 # This package supports all platforms listed below.
@@ -17,7 +17,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  audioplayers: ^5.2.1
+  audioplayers: ^6.0.0
 
 dev_dependencies:
   flutter_test:

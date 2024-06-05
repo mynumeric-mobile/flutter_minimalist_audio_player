@@ -7,3 +7,5 @@
 ## 1.1.0
 * add beforePlay event
 * add fade in and fade out effet
+## 1.1.1
+* upgrade audio player
