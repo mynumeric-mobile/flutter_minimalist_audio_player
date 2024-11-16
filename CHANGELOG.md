@@ -9,3 +9,5 @@
 * add fade in and fade out effet
 ## 1.1.1
 * upgrade audio player
+## 1.1.2
+* minor bug correction
