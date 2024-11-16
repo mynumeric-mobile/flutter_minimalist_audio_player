@@ -201,7 +201,7 @@ class MiniPlayer extends AudioPlayer {
       Duration? position,
       PlayerMode? mode,
       Function(MiniPlayer)? beforePlay}) async {
-    await beforePlay?.call(this);
+    if (beforePlay != null) await beforePlay.call(this);
     return super.play(
       source,
       volume: volume,
