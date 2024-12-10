@@ -90,9 +90,9 @@ class _MinimalistAudioPlayerState extends State<MinimalistAudioPlayer> {
                   try {
                     await _player
                         .fadeIn(
-                      source: UrlSource(widget.media, mimeType: "audio/mpeg"),
-                      beforeStart: widget.beforeStart,
-                    )
+                            source: UrlSource(widget.media, mimeType: "audio/mpeg"),
+                            beforeStart: widget.beforeStart,
+                            mode: PlayerMode.mediaPlayer)
                         .then((value) async {
                       _duration = await _player.getDuration();
                     }).onError((error, stackTrace) {
