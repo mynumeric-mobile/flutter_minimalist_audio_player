@@ -25,7 +25,20 @@ if (flutterVersionName == null) {
 android {
     namespace "com.example.example"
     compileSdk flutter.compileSdkVersion
-    ndkVersion flutter.ndkVersion
+        namespace ="com.example.example"
+    ndkVersion = "25.1.8937393"
+
+    subprojects {
+        afterEvaluate { project ->
+            if (project.hasProperty('android')) {
+                project.android {
+                    if (namespace == null) {
+                        namespace project.group
+                    }
+                }
+            }
+        }
+    }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 
+enum FadingType { none, fadeIn, fadeOut }
+
 ///
 /// MinimalistAudioPlayer Widget
 ///
@@ -88,7 +90,7 @@ class _MinimalistAudioPlayerState extends State<MinimalistAudioPlayer> {
                   try {
                     await _player
                         .fadeIn(
-                      source: UrlSource(widget.media),
+                      source: UrlSource(widget.media, mimeType: "audio/mpeg"),
                       beforeStart: widget.beforeStart,
                     )
                         .then((value) async {
@@ -182,7 +184,7 @@ class MiniPlayer extends AudioPlayer {
   ///
   /// Default fade duration
   ///
-  Duration defaultFadeDuration = const Duration(seconds: 3);
+  Duration defaultFadeDuration = const Duration(seconds: 1);
 
   ///
   /// update fade loop duration

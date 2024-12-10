@@ -5,6 +5,7 @@ const radios = {
   "Europe 2": "https://europe2.lmn.fm/europe2.mp3",
   "RTS": "https://sc.creacast.com/rts-national.mp3",
   "Skyrock": "https://icecast8.play.cz/skyrock128.mp3",
+  "Europe 1": "https://europe1.lmn.fm/europe1.mp3"
 };
 
 void main() {

@@ -11,3 +11,7 @@
 * upgrade audio player
 ## 1.1.2
 * minor bug correction
+## 1.1.3
+* change default fade duration from 3 to 1s
+## 1.1.4
+* upgrade package
